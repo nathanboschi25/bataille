@@ -24,7 +24,6 @@ public class Carte {
      */
     public Image getUIimage(){
         return new Image("assets/google_cards/" + valeur + '_' + Couleur.str[couleur] + ".png");
-//        return new Image("assets/google_cards/back.png");
     }
 
     /**
