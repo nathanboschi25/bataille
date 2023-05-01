@@ -37,11 +37,7 @@ public class PaquetDeCartes {
     }
 
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        for (Carte c : cartes) {
-            sb.append(c).append("\n");
-        }
-        return sb.toString();
+        return "Paquet de " + this.initialSize + " cartes.";
     }
 
 

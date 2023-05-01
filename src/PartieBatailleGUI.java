@@ -3,16 +3,19 @@ import game_elements.Carte;
 import game_elements.Joueur;
 import game_elements.PaquetDeCartes;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
@@ -20,6 +23,8 @@ import javafx.stage.Stage;
 import javax.swing.text.LabelView;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
+import java.util.Optional;
 
 public class PartieBatailleGUI extends Application {
 
@@ -44,13 +49,16 @@ public class PartieBatailleGUI extends Application {
     private Label nbCartesJ2;
 
     private final static Image cardBackImage = new Image("assets/google_cards/back.png");
+
     private Label noTour;
 
-    public void initGame(String nomJ1, String nomJ2, byte nbCartes) {
-        paquetDeCartes = new PaquetDeCartes(nbCartes);
 
-        this.joueurA = new Joueur(nomJ1);
-        this.joueurB = new Joueur(nomJ2);
+    public void initGame() {
+
+        paquetDeCartes = new PaquetDeCartes(PaquetDeCartes.Taille.PAQUET_32);
+
+        joueurA = new Joueur("Tom");
+        joueurB = new Joueur("Jerry");
 
         plateau = new ArrayList<>();
 
@@ -134,8 +142,8 @@ public class PartieBatailleGUI extends Application {
         noTour.setText("Tour " + nbTours);
 
         if (plateau.size() >= 2) {
-            c1PotJeuGUI.setImage(plateau.get(plateau.size() - 1).getUIimage());
-            c2PotJeuGUI.setImage(plateau.get(plateau.size() - 2).getUIimage());
+            c1PotJeuGUI.setImage(new Image(plateau.get(plateau.size() - 1).getUIimage()));
+            c2PotJeuGUI.setImage(new Image(plateau.get(plateau.size() - 2).getUIimage()));
         } else {
             nbCartesJ1.setText("Main:\t" + joueurA.main.size() + "\nTas:  \t" + joueurA.tas.size());
             nbCartesJ2.setText("Main:\t" + joueurB.main.size() + "\nTas:  \t" + joueurB.tas.size());
@@ -221,25 +229,22 @@ public class PartieBatailleGUI extends Application {
 
     public byte whoWins() {
         System.out.print(ConsoleColors.RED_BOLD_BRIGHT);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Fin de partie");
         if (gagnePartie(joueurA.id)) {
-            System.out.println(joueurA.nom + " a gagné la partie haut la main !");
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Fin de partie");
-            alert.setHeaderText("C'est la fin de la partie, " + joueurA.nom + " a gagné la partie haut la main !");
+            System.out.println(joueurA.nom + " a gagné la partie en " + this.nbTours + " tours !");
+
+            alert.setHeaderText("C'est la fin de la partie, " + joueurA.nom + " a gagné la partie en " + this.nbTours + " tours !");
             alert.showAndWait();
             return joueurA.id;
         }
         if (gagnePartie(joueurB.id)) {
-            System.out.println(joueurB.nom + " a gagné la partie haut la main !");
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Fin de partie");
-            alert.setHeaderText("C'est la fin de la partie, " + joueurA.nom + " a gagné la partie haut la main !");
+            System.out.println(joueurB.nom + " a gagné la partie en " + this.nbTours + " tours !");
+            alert.setHeaderText("C'est la fin de la partie, " + joueurA.nom + " a gagné la partie en " + this.nbTours + " tours !");
             alert.showAndWait();
             return joueurB.id;
         }
         System.out.println("Vous avez dépassé le nombre de tours maximum, il y a donc égalité.");
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Fin de partie");
         alert.setHeaderText("C'est la fin de la partie, le nombre de tours maximum à été dépassé.\nIl y a donc égalité.");
         alert.showAndWait();
         return 0;
@@ -254,7 +259,7 @@ public class PartieBatailleGUI extends Application {
 
         BorderPane fenetre = new BorderPane();
 
-        initGame("Tom", "Jerry", PaquetDeCartes.Taille.PAQUET_32);
+        initGame();
         initGUI(fenetre);
 
         victoire = false;

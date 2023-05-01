@@ -1,7 +1,6 @@
 package game_elements;
 
 import assets.ConsoleColors;
-import javafx.scene.image.Image;
 
 public class Carte {
 
@@ -22,8 +21,8 @@ public class Carte {
      * Récupere l'image liée à la carte (Image javafx)
      * @return Image .png de la carte
      */
-    public Image getUIimage(){
-        return new Image("assets/google_cards/" + valeur + '_' + Couleur.str[couleur] + ".png");
+    public String getUIimage(){
+        return "assets/google_cards/" + valeur + '_' + Couleur.str[couleur] + ".png";
     }
 
     /**

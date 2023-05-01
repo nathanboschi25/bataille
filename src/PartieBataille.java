@@ -5,6 +5,7 @@ import game_elements.PaquetDeCartes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Scanner;
 
 public class PartieBataille {
 
@@ -123,8 +124,29 @@ public class PartieBataille {
     }
 
     public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
 
-        PartieBataille bataille = new PartieBataille("Joueur 1", "Joueur 2", PaquetDeCartes.Taille.PAQUET_52);
+        String[] nomJoueurs = new String[2];
+        System.out.println("Nom du joueur 1 :");
+        nomJoueurs[0] = sc.next();
+        System.out.println("Nom du joueur 2 :");
+        nomJoueurs[1] = sc.next();
+        System.out.println("Combien de cartes dans le paquet ? (1: Paquet de 52 cartes, 2: Paquet de 32 cartes)");
+
+        PartieBataille bataille;
+
+        switch (sc.nextByte()) {
+            case 1 -> {
+                bataille = new PartieBataille(nomJoueurs[0], nomJoueurs[1], PaquetDeCartes.Taille.PAQUET_52);
+            }
+            case 2 -> {
+                bataille = new PartieBataille(nomJoueurs[0], nomJoueurs[1], PaquetDeCartes.Taille.PAQUET_32);
+            }
+            default -> {
+                bataille = new PartieBataille(nomJoueurs[0], nomJoueurs[1], PaquetDeCartes.Taille.PAQUET_32);
+            }
+        }
+
         bataille.initGame();
 
         while (!victoire && bataille.nbTours < bataille.paquetDeCartes.initialSize * bataille.paquetDeCartes.initialSize) {
